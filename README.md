@@ -1,49 +1,67 @@
 # Marketing Campaign Performance Analysis
 
-SQL-based analysis of digital marketing campaign performance across channels, funnel stages, and customer engagement — built to identify what actually drives conversion and where budget should shift.
+SQL analysis of digital marketing campaign performance across channels, funnel stages, and email engagement, to find what drives conversion and where budget should shift.
 
-## Overview
+## Dataset
+- **Source:** [Predict Conversion in Digital Marketing Dataset](https://www.kaggle.com/datasets/rabieelkharoua/predict-conversion-in-digital-marketing-dataset) by Rabie El Kharoua, Kaggle. License: [CHECK ON DATASET PAGE].
+- **Size:** 8,000 customer touchpoints, 20 columns (demographics, campaign details, engagement metrics, conversion outcome).
+- **Note:** This is a public practice dataset, and its conversion rates (85-93%) are far higher than real campaigns. The relative comparisons are the focus, not the absolute rates.
+- **Channels (5):** PPC, SEO, Social Media, Email, Referral
+- **Campaign types (4):** Awareness, Consideration, Conversion, Retention
 
-- **Dataset:** 8,000 customer touchpoints
-- **Channels analyzed:** PPC, SEO, Social Media, Email, Referral (5)
-- **Campaign types analyzed:** Awareness, Consideration, Conversion, Retention (4)
-- **Tools:** MySQL (analysis), Google Sheets (visualization)
+## Tools
+MySQL Workbench (analysis), Google Sheets (charts)
 
 ## Approach
-
-1. Loaded and validated the raw dataset in MySQL Workbench.
-2. Wrote SQL queries to compute conversion rate, cost-per-acquisition (CPA), and engagement-driven conversion lift.
-3. Validated findings against the dataset's actual binary conversion outcome (not just the continuous conversion-probability feature) to ensure results were real, not artifacts of the wrong column.
-4. Visualized results in Google Sheets and compiled key metrics into actionable recommendations.
+1. Loaded and validated the dataset in MySQL (row count, column types).
+2. Computed conversion rate, cost per acquisition (CPA = total ad spend / total conversions), and conversion by email engagement.
+3. Used the binary `Conversion` outcome rather than the continuous conversion-rate score, so results reflect what actually happened.
+4. Checked the main gaps with two-proportion z-tests.
+5. Charted results in Google Sheets and wrote recommendations.
 
 ## Key Findings
 
-**1. Funnel stage is the strongest driver of conversion — not channel.**
-Bottom-funnel (Conversion-type) campaigns converted at **93.36%**, compared to **85.56%** for top-funnel (Awareness) campaigns — an **~8-point gap**.
+**1. Campaign type matters more than channel.** Conversion-type campaigns converted at 93.36% (n = 2,077) vs 85.56% for Awareness (n = 1,988), a 7.8-point gap (two-proportion z-test: z ≈ 8.1).
 
-**2. Email engagement measurably lifts conversion.**
-Customers with high email engagement (above-average opens) converted at **90.85%**, versus **84.50%** for low-engagement customers — a **~6-point lift**.
+| Campaign type | n | Conversion rate |
+|---|---|---|
+| Conversion | 2,077 | 93.36% |
+| Retention | 1,947 | 85.82% |
+| Awareness | 1,988 | 85.56% |
+| Consideration | 1,988 | 85.56% |
 
-**3. Channel choice alone has limited standalone impact.**
-Conversion rate and CPA were both tightly clustered across all 5 channels (≈1–2 point spread in conversion, ≈₹200 spread in CPA). Channel alone is not a strong predictor of performance — funnel stage and engagement matter more.
+Only Conversion-type campaigns stand out. Retention converts at about the same rate as Awareness and Consideration.
 
-| Metric | Best performer | Weakest performer | Gap |
+**2. Higher email engagement goes with higher conversion.** Customers with above-average email opens converted at 90.85% (n = 3,967) vs 84.50% (n = 4,033) for the rest, a 6.35-point difference (z ≈ 8.6).
+
+**3. Channel has little effect on its own.** Conversion rates across the five channels fell within 1.5 points of each other (86.83% to 88.31%), and the gap between the highest and lowest channel is not statistically significant (z ≈ 1.3). CPA ranged only from ₹5,612 to ₹5,809, a ₹197 spread.
+
+| Channel | n | Conversion rate | CPA (₹) |
 |---|---|---|---|
-| Conversion by funnel stage | Conversion (93.36%) | Awareness (85.56%) | 7.8 pts |
-| Conversion by engagement | High engagement (90.85%) | Low engagement (84.50%) | 6.35 pts |
-| CPA by channel | PPC (₹5,612) | Email (₹5,809) | ₹197 |
+| Referral | 1,719 | 88.31% | 5,701 |
+| PPC | 1,655 | 88.28% | 5,612 |
+| SEO | 1,550 | 87.68% | 5,696 |
+| Email | 1,557 | 87.03% | 5,809 |
+| Social Media | 1,519 | 86.83% | 5,718 |
+
+Email as a channel ranks fourth on conversion and highest on CPA. Its engagement effect (Finding 2) is about how customers behave, not a channel advantage.
 
 ## Recommendations
+1. **Shift budget gradually toward Conversion-type campaigns**, and track total conversions, not only conversion rate, because awareness campaigns feed the audience that converts later.
+2. **Test engagement-building email campaigns** to see whether raising opens raises conversion.
+3. **Don't reallocate budget by channel alone.** Differences between channels are small.
 
-- **Shift budget toward bottom-funnel campaigns** (Conversion, Retention) where conversion is proven highest, rather than spreading spend evenly across the funnel.
-- **Invest in email engagement nurturing** — opens and clicks correlate with meaningfully higher conversion, making engagement-building campaigns a worthwhile lever.
-- **Don't over-index on channel reallocation.** Since channel-level differences are minor, budget decisions should be driven primarily by funnel stage and engagement signals, not platform choice alone.
+## Limitations
+- **Observational data, so correlation only.** Conversion-type campaigns likely target audiences that are already warm, so the 7.8-point gap partly reflects audience, not campaign quality.
+- **Engagement may not cause conversion.** Customers who open emails may already be more likely to convert.
+- **The "high engagement" cutoff is the dataset average,** which is arbitrary. Results should be re-checked with the median or quartiles.
+- **Conversion rate is not ROI.** The analysis has no revenue per customer, only ad spend and conversions.
+- **Synthetic practice data,** so absolute rates are unrealistic and findings should be validated on real campaign data.
+- **Next step:** a controlled test (holdout group) before moving real budget.
 
 ## Repository Contents
-
-- `queries.sql` — all SQL queries used for the analysis
-- Chart screenshots — conversion by funnel stage, conversion by engagement, CPA by channel
+- `queries.sql`: all SQL used
+- `conversion_rate_pct.png`, `conversion_rate_pct vs CampaignType.png`, `cost_per_acquisition vs CampaignChannel.png`: charts
 
 ## Skills Demonstrated
-
-SQL (aggregation, CASE-based segmentation, grouped comparisons), data validation, metric design, business-focused insight generation.
+SQL (aggregation, CASE segmentation, subqueries), data validation, metric definition (CPA, conversion rate), significance testing, business recommendations.
