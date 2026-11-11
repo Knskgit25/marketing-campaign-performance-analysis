@@ -32,7 +32,7 @@ MySQL Workbench (analysis), Google Sheets (charts)
 
 Only Conversion-type campaigns stand out. Retention converts at about the same rate as Awareness and Consideration.
 
-**2. Higher email engagement goes with higher conversion.** Customers with above-average email opens converted at 90.85% (n = 3,967) vs 84.50% (n = 4,033) for the rest, a 6.35-point difference (z ≈ 8.6).
+**2. Higher email engagement goes with higher conversion.** Customers with 10 or more email opens (just above the dataset average of 9.48) converted at 90.85% (n = 3,967) vs 84.50% (n = 4,033) for the rest, a 6.35-point difference (z ≈ 8.6).
 
 **3. Channel has little effect on its own.** Conversion rates across the five channels fell within 1.5 points of each other (86.83% to 88.31%), and the gap between the highest and lowest channel is not statistically significant (z ≈ 1.3). CPA ranged only from ₹5,612 to ₹5,809, a ₹197 spread.
 
@@ -54,14 +54,20 @@ Email as a channel ranks fourth on conversion and highest on CPA. Its engagement
 ## Limitations
 - **Observational data, so correlation only.** Conversion-type campaigns likely target audiences that are already warm, so the 7.8-point gap partly reflects audience, not campaign quality.
 - **Engagement may not cause conversion.** Customers who open emails may already be more likely to convert.
-- **The "high engagement" cutoff is the dataset average,** which is arbitrary. Results should be re-checked with the median or quartiles.
+- **The "high engagement" cutoff (10+ opens) is arbitrary.** It sits just above the dataset average of 9.48 (range 0 to 19). Results should be re-checked with the median or quartiles.
 - **Conversion rate is not ROI.** The analysis has no revenue per customer, only ad spend and conversions.
 - **Synthetic practice data,** so absolute rates are unrealistic and findings should be validated on real campaign data.
 - **Next step:** a controlled test (holdout group) before moving real budget.
 
+## Result Screenshots
+![Conversion by campaign type](1_conversion_by_campaign_type.png)
+![Conversion by channel](2_conversion_by_channel.png)
+![Email opens average](3_email_opens_average.png)
+
 ## Repository Contents
 - `queries.sql`: all SQL used
 - `conversion_rate_pct.png`, `conversion_rate_pct vs CampaignType.png`, `cost_per_acquisition vs CampaignChannel.png`: charts
+- `1_conversion_by_campaign_type.png`, `2_conversion_by_channel.png`, `3_email_opens_average.png`: result screenshots
 
 ## Skills Demonstrated
 SQL (aggregation, CASE segmentation, subqueries), data validation, metric definition (CPA, conversion rate), significance testing, business recommendations.
